@@ -1,0 +1,57 @@
+{
+  "name": "interface-doc",
+  "description": "explode an interface",
+  "version": "0.0.1",
+  "author": "Coulee Tech",
+  "bin": {
+    "ts-explode": "./bin/run"
+  },
+  "bugs": "https://github.com/CouleeTech/ts-explode/issues",
+  "dependencies": {
+    "@oclif/command": "^1.5.8",
+    "@oclif/config": "^1.10.4",
+    "@oclif/plugin-help": "^2.1.4",
+    "ts-simple-ast": "^20.0.0",
+    "tslib": "^1.9.3"
+  },
+  "devDependencies": {
+    "@oclif/test": "^1.2.2",
+    "@oclif/tslint": "^3.1.1",
+    "@types/chai": "^4.1.7",
+    "@types/jest": "^23.3.10",
+    "@types/mocha": "^5.2.5",
+    "@types/node": "^10.12.18",
+    "chai": "^4.2.0",
+    "jest": "^23.6.0",
+    "mocha": "^5.2.0",
+    "nyc": "^13.0.1",
+    "ts-jest": "^23.10.5",
+    "ts-node": "^7.0.1",
+    "tslint": "^5.12.0",
+    "tslint-config-prettier": "^1.17.0",
+    "typescript": "^3.2.2"
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "files": [
+    "/bin",
+    "/lib"
+  ],
+  "homepage": "https://github.com/CouleeTech/ts-explode",
+  "keywords": [
+    "oclif"
+  ],
+  "license": "MIT",
+  "main": "index.ts",
+  "oclif": {
+    "bin": "ts-explode"
+  },
+  "repository": "CouleeTech/ts-explode",
+  "scripts": {
+    "posttest": "tslint -p test -t stylish",
+    "prepack": "rm -rf lib && tsc -b",
+    "test": "nyc --extension .ts mocha --forbid-only \"test/**/*.test.ts\""
+  },
+  "types": "lib/index.d.ts"
+}

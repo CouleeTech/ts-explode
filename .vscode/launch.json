@@ -18,5 +18,19 @@
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen"
         },
+        {
+            "type": "node",
+            "name": "launch",
+            "request": "launch",
+            "program": "${workspaceFolder}/bin/run",
+            "args": [
+                "--out",
+                "./out",
+                "test/testInterfaces/contact.ts"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen"
+        },
     ]
 }

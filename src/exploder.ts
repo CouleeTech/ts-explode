@@ -1,4 +1,4 @@
-import { join, resolve } from 'path'
+import { join } from 'path'
 import {
   CodeBlockWriter,
   InterfaceDeclaration,
@@ -6,14 +6,12 @@ import {
   Project,
   Type,
   TypeGuards,
-  WriterFunction
+  WriterFunction,
+  ProjectOptions,
 } from 'ts-simple-ast'
 
 export class InterfaceExploder {
-  private project = new Project({
-    tsConfigFilePath: `${resolve(__dirname, '../tsconfig.json')}`,
-    addFilesFromTsConfig: false
-  })
+  private project: Project
 
   private allInterfaces?: InterfaceDeclaration[]
 
@@ -21,6 +19,9 @@ export class InterfaceExploder {
   private includeDocComments = false
 
   constructor(files: string[], private readonly outPath: string) {
+  constructor(files: string[], private readonly outPath: string, options?: ProjectOptions) {
+    this.project = new Project(options)
+
     this.project.addExistingSourceFiles(files)
     this.project.resolveSourceFileDependencies()
   }

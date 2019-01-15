@@ -1,29 +1,43 @@
 import { Command, flags } from '@oclif/command'
+import { InterfaceExploder } from './exploder'
+import { resolve } from 'path'
+import { ProjectOptions } from 'ts-simple-ast'
 
-class Test extends Command {
-  static description = 'describe the command here'
+class Explode extends Command {
+  public static description = 'describe the command here'
 
-  static flags = {
+  // tslint:disable-next-line:no-shadowed-variable
+  public static flags = {
     // add --version flag to show CLI version
     version: flags.version({ char: 'v' }),
     help: flags.help({ char: 'h' }),
-    // flag with a value (-n, --name=VALUE)
-    name: flags.string({ char: 'n', description: 'name to print' }),
-    // flag with no value (-f, --force)
-    force: flags.boolean({ char: 'f' })
+    out: flags.string({
+      description: 'Where to put the exploded interfaces',
+      char: 'o',
+      required: true
+    }),
+    config: flags.string({
+      description: 'Path to the tsconfig'
+    })
   }
 
-  static args = [{ name: 'file' }]
+  public static strict = false
 
-  async run() {
-    const { args, flags } = this.parse(Test)
+  public async run() {
+    // tslint:disable-next-line:no-shadowed-variable
+    const { flags, argv } = this.parse(Explode)
 
-    const name = flags.name || 'world'
-    this.log(`hello ${name} from ./src/index.ts`)
-    if (args.file && flags.force) {
-      this.log(`you input --force and --file: ${args.file}`)
+    const options: ProjectOptions = {}
+
+    if (flags.config) {
+      options.tsConfigFilePath = `${resolve(__dirname, '../tsconfig.json')}`
     }
+
+    const exploder = new InterfaceExploder(argv, flags.out, options)
+
+    exploder.writeExplodedInterfaces()
+    exploder.save()
   }
 }
 
-export = Test
+export = Explode

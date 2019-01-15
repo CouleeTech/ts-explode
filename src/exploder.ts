@@ -8,6 +8,7 @@ import {
   TypeGuards,
   WriterFunction,
   ProjectOptions,
+  PropertySignature
 } from 'ts-simple-ast'
 
 export class InterfaceExploder {
@@ -81,6 +82,10 @@ export class InterfaceExploder {
       return this.explodeInlineInterface(type)
     }
 
+    if (type.isObject()) {
+      return this.explodeObject(type)
+    }
+
     if (type.isUnion()) {
       return this.explodeMany(type.getUnionTypes(), '|')
     }
@@ -90,6 +95,16 @@ export class InterfaceExploder {
     }
 
     return writer => writer.write(this.stringifyType(type))
+  }
+
+  public explodeObject(type: Type): WriterFunction {
+    const declaration = type.getSymbol()!.getDeclarations()[0]
+
+    if (!TypeGuards.isTypeLiteralNode(declaration)) {
+      throw new Error(`Can't resolve type: ${type.getText()}`)
+    }
+
+    return this.explodePropertySignatureBlock(declaration.getProperties())
   }
 
   /**
@@ -106,9 +121,14 @@ export class InterfaceExploder {
     if (!iface) {
       throw new Error(`Can't find interface: "${type.getText()}"`)
     }
+
+    return this.explodePropertySignatureBlock(iface.getProperties())
+  }
+
+  private explodePropertySignatureBlock(properties: PropertySignature[]): WriterFunction {
     return writer =>
       writer.block(() => {
-        for (const property of iface.getProperties()) {
+        for (const property of properties) {
           this.writeDocComments(property, writer)
 
           if (property.hasQuestionToken()) {

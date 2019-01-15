@@ -18,7 +18,9 @@ export class InterfaceExploder {
   // Use this to toggle on/off pulling through the doc comments
   private includeDocComments = false
 
-  constructor(files: string[], private readonly outPath: string) {
+  // If true, will overwrite output files
+  private overwrite = true
+
   constructor(files: string[], private readonly outPath: string, options?: ProjectOptions) {
     this.project = new Project(options)
 
@@ -41,7 +43,9 @@ export class InterfaceExploder {
         return false
       })
       .forEach(iface => {
-        const file = this.project.createSourceFile(join(this.outPath, iface.getName() + '-doc.ts'))
+        const file = this.project.createSourceFile(join(this.outPath, iface.getName() + '-doc.ts'), '', {
+          overwrite: this.overwrite
+        })
 
         const newInterface = file.addInterface({ name: iface.getName(), isExported: true })
 

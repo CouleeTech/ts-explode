@@ -5,6 +5,7 @@
 /dist
 /lib
 /tmp
+/out
 /yarn.lock
 node_modules
 node_modules/

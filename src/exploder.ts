@@ -11,6 +11,11 @@ import {
   PropertySignature
 } from 'ts-simple-ast'
 
+enum EnumMode {
+  NAME,
+  VALUE
+}
+
 export class InterfaceExploder {
   private project: Project
 
@@ -21,6 +26,8 @@ export class InterfaceExploder {
 
   // If true, will overwrite output files
   private overwrite = true
+
+  private enumMode: EnumMode = EnumMode.VALUE
 
   constructor(files: string[], private readonly outPath: string, options?: ProjectOptions) {
     this.project = new Project(options)
@@ -94,9 +101,36 @@ export class InterfaceExploder {
       return this.explodeMany(type.getIntersectionTypes(), '&')
     }
 
+    if (type.isEnumLiteral()) {
+      return this.explodeEnum(type)
+    }
+
     return writer => writer.write(this.stringifyType(type))
   }
 
+  public explodeEnum(type: Type): WriterFunction {
+    const declaration = type.getSymbolOrThrow().getDeclarations()[0]
+
+    if (!TypeGuards.isEnumMember(declaration)) {
+      throw new Error(`Expected ${declaration} to be an EnumMember`)
+    }
+
+    return writer => {
+      switch (this.enumMode) {
+        case EnumMode.NAME:
+          return writer.write(declaration.getText())
+        case EnumMode.VALUE:
+          const value = declaration.getValue()
+          return writer.write(typeof value === 'string' ? `"${value}"` : String(value))
+      }
+    }
+  }
+
+  /**
+   * Explode a type literal
+   *
+   * @param type Object type of explode
+   */
   public explodeObject(type: Type): WriterFunction {
     const declaration = type.getSymbol()!.getDeclarations()[0]
 

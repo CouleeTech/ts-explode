@@ -6,9 +6,9 @@ type Tag = {
 }
 
 enum PhoneType {
-  CELL,
-  BUSINESS,
-  HOME
+  CALL = 'CELL',
+  BUSINESS = 'BUSINESS',
+  HOME = 'HOME'
 }
 
 interface Phone {

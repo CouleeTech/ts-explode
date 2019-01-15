@@ -1,7 +1,6 @@
 src
 tslint.json
 .prettierrc
-jestconfig.json
 .DS_Store
 .github
 .gitignore

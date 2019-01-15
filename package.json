@@ -1,7 +1,7 @@
 {
   "name": "ts-explode",
   "description": "explode an interface",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": "Coulee Tech",
   "bin": {
     "ts-explode": "./bin/run"

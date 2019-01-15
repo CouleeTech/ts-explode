@@ -1,6 +1,5 @@
 import { Command, flags } from '@oclif/command'
 import { InterfaceExploder } from './exploder'
-import { resolve } from 'path'
 import { ProjectOptions } from 'ts-simple-ast'
 
 class Explode extends Command {
@@ -30,7 +29,7 @@ class Explode extends Command {
     const options: ProjectOptions = {}
 
     if (flags.config) {
-      options.tsConfigFilePath = `${resolve(__dirname, '../tsconfig.json')}`
+      options.tsConfigFilePath = flags.config
     }
 
     const exploder = new InterfaceExploder(argv, flags.out, options)

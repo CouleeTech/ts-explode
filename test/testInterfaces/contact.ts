@@ -16,13 +16,18 @@ interface Phone {
   number: number
 }
 
+interface Entity {
+  id: UUID
+}
+
+interface Person extends Entity {
+  name: string
+}
+
 /**
  * @document
  */
-interface Contact {
-  id: UUID
+interface Contact extends Person {
   tags: Tag[]
   phones: Phone[]
-
-  name: string
 }

@@ -1,5 +1,4 @@
 export interface Contact {
-    id: string;
     tags: Array< {
             name: string,
         }
@@ -13,4 +12,5 @@ export interface Contact {
         }
         >;
     name: string;
+    id: string;
 }

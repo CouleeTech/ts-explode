@@ -8,7 +8,8 @@ import {
   TypeGuards,
   WriterFunction,
   ProjectOptions,
-  PropertySignature
+  PropertySignature,
+  ExtendsClauseableNode
 } from 'ts-simple-ast'
 
 enum EnumMode {
@@ -66,13 +67,37 @@ export class InterfaceExploder {
   }
 
   public explodeInterface(oldInterface: InterfaceDeclaration, newInterface: InterfaceDeclaration) {
-    for (const property of oldInterface.getProperties()) {
+    const properties = this.getInterfaceProperties(oldInterface)
+
+    for (const property of properties) {
       newInterface.addProperty({
         ...property.getStructure(),
         docs: this.includeDocComments ? property.getStructure().docs : [],
         type: this.explodeType(property.getType())
       })
     }
+  }
+
+  public getInterfaceProperties(iface: InterfaceDeclaration) {
+    return iface.getProperties().concat(this.getExtendedProperties(iface))
+  }
+
+  public getExtendedProperties(node: ExtendsClauseableNode) {
+    const result: PropertySignature[] = []
+
+    for (const parent of node.getExtends()) {
+      const iface = parent
+        .getType()
+        .getSymbolOrThrow()
+        .getDeclarations()
+        .find(TypeGuards.isInterfaceDeclaration)
+
+      if (iface) {
+        this.getInterfaceProperties(iface).forEach(prop => result.push(prop))
+      }
+    }
+
+    return result
   }
 
   /**
